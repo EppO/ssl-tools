@@ -10,7 +10,7 @@ if ARGV.length < 1
 end
 
 def verify_cert(verify)
-  "[#{verify ? "\e[32mOK\e[0m" : "\e[31mKO\e[0m"}]"
+  "#{verify ? "\e[32m👍\e[0m" : "🔥"}"
 end
 
 hostname = ARGV[0]
@@ -36,8 +36,8 @@ cert_chain.reverse.each do |store|
   cert = store[:cert]
   verify = store[:verify]
   if socket.peer_cert_chain.include?(cert)
-    puts "\e[34mSent by Server\e[0m: #{verify_cert(verify)} #{cert.subject.to_s(OpenSSL::X509::Name::ONELINE)}"
+    puts "#{verify_cert(verify)} \e[34mSent by Server\e[0m: #{cert.subject.to_s(OpenSSL::X509::Name::ONELINE)}"
   else
-    puts "\e[36mIn Trust Store\e[0m: #{verify_cert(verify)} #{cert.subject.to_s(OpenSSL::X509::Name::ONELINE)}"
+    puts "#{verify_cert(verify)} \e[36mIn Trust Store\e[0m: #{cert.subject.to_s(OpenSSL::X509::Name::ONELINE)}"
   end
 end
