@@ -31,8 +31,8 @@ socket = OpenSSL::SSL::SSLSocket.new(TCPSocket.new(hostname, port), ssl_context)
 
 cert_chain.reverse.each do |cert|
   if socket.peer_cert_chain.include?(cert)
-    puts "\e[32mSent by Server\e[0m: #{cert.subject.to_s}"
+    puts "\e[32mSent by Server\e[0m: #{cert.subject.to_s(OpenSSL::X509::Name::ONELINE)}"
   else
-    puts "\e[36mIn Trust Store\e[0m: #{cert.subject.to_s}"
+    puts "\e[36mIn Trust Store\e[0m: #{cert.subject.to_s(OpenSSL::X509::Name::ONELINE)}"
   end
 end
