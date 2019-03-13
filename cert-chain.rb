@@ -17,8 +17,9 @@ cert_chain = []
 ssl_context = OpenSSL::SSL::SSLContext.new
 ssl_context.verify_mode = OpenSSL::SSL::VERIFY_PEER
 ssl_context.verify_callback = lambda do |verify_ok, cert_store|
-  cert_chain << { cert: cert_store.current_cert, verify: verify_ok }
-  verify_ok
+  current_cert = { cert: cert_store.current_cert, verify: verify_ok }
+  cert_chain << current_cert if !cert_chain.include?(current_cert)
+  true
 end
 
 cert_store = OpenSSL::X509::Store.new
@@ -26,7 +27,7 @@ cert_store.set_default_paths
 
 ssl_context.cert_store = cert_store
 
-socket = OpenSSL::SSL::SSLSocket.new(TCPSocket.new(hostname, port), ssl_context).tap{|e| e.connect}
+socket = OpenSSL::SSL::SSLSocket.new(TCPSocket.new(hostname, port), ssl_context).tap{ |e| e.connect }
 
 cert_chain.reverse.each do |store|
   cert = store[:cert]
